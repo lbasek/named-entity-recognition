@@ -53,3 +53,9 @@ fabric.properties
 
 __pycache__
 .DS_store
+
+
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/named-entity-recognition.iml
