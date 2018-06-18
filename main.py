@@ -1,4 +1,3 @@
-import dataset
 import pandas as pd
 
 data = pd.read_csv('./dataset/csv/train.csv', encoding='utf-8', delimiter='\t')
