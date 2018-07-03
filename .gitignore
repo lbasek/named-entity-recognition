@@ -58,4 +58,9 @@ __pycache__
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+.idea/other.xml
+.idea/Project_Default.xml
 .idea/named-entity-recognition.iml
+
+embedding/*.txt
+models/*
