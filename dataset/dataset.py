@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from tqdm import tqdm
 
 
@@ -10,6 +11,10 @@ class Dataset:
         self.data_frame = pd.DataFrame(columns=['Sentence #', 'Word', 'POS', 'Chunk', 'Tag'])
 
     def create(self):
+
+        if not os.path.isdir("./csv") or not os.path.exists(self.filename):
+            raise ValueError("Filename or csv dir is wrong.")
+
         print("-------Creating dataset-------")
 
         f = open(self.filename, "r+")
@@ -18,7 +23,6 @@ class Dataset:
 
         iterator = 1
         for line in tqdm(f.readlines()):
-            line = line.replace(',', '.')
             row = self.__process_line(line)
 
             if not (row is None or row[0] in non_allow_chars or row[1] in non_allow_chars):
@@ -43,3 +47,8 @@ class Dataset:
         parts = line.strip().split()
         if len(parts) == 4:
             return parts
+
+
+if __name__ == '__main__':
+    dataset = Dataset("./raw/test.txt", "./csv/test")
+    dataset.create()
