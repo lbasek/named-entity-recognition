@@ -26,8 +26,8 @@ class Preprocessing(object):
 
         sentences = sentence_getter.sentences
 
-        plt.hist([len(s) for s in sentences], bins=50)
-        plt.show()
+        # plt.hist([len(s) for s in sentences], bins=50)
+        # plt.show()
 
         X, Y = [], []
 

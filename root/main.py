@@ -11,8 +11,9 @@ preprocessing = Preprocessing(TRAIN, TEST, VALIDATION)
 
 X_train, Y_train, num_entities, num_words = preprocessing.create_input(Dataset.train)
 X_validation, Y_validation, _, _ = preprocessing.create_input(Dataset.validation)
+X_test, Y_test, _, _ = preprocessing.create_input(Dataset.test)
 
-nn = NeuralNetwork(num_words, num_entities, X_train, Y_train, X_validation, Y_validation)
+nn = NeuralNetwork(num_words, num_entities, X_train, Y_train, X_validation, Y_validation, X_test, Y_test)
 model, history = nn.train()
 
 print(history.history.keys())
