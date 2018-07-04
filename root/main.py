@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-
 from root.model import NeuralNetwork
 from root.preprocessing import Preprocessing, Dataset
 

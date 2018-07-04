@@ -44,39 +44,30 @@ class Preprocessing(object):
             Y.append(y)
 
         # build vocabulary of words and entities
-        words = set(itertools.chain(*X))
-        labels = set(itertools.chain(*Y))
+        words = list(set(itertools.chain(*X)))
+        words.append("<END-PAD>")
+        labels = list(set(itertools.chain(*Y)))
 
-        index2word = dict((i + 1, v) for i, v in enumerate(words))
-        word2index = dict((v, i + 1) for i, v in enumerate(words))
+        word2index = {w: i for i, w in enumerate(words)}
+        labels2index = {t: i for i, t in enumerate(labels)}
 
-        index2labels = dict((i + 1, v) for i, v in enumerate(labels))
-        labels2index = dict((v, i + 1) for i, v in enumerate(labels))
+        index2word = {i: w for i, w in enumerate(words)}
+        index2labels = {i: t for i, t in enumerate(labels)}
 
-        # # testing dictionary
-        # tmp_index = word2index["Soccer"]
-        # print(tmp_index)
-        #
-        # tmp_word = index2word[inx]
-        # print(tmp_word)
-
-        num_entities = len(labels2index) + 1
-        num_words = len(word2index) + 1
+        num_entities = len(labels2index)
+        num_words = len(word2index)
 
         print('num_words = {0}, num_entities = {1}'.format(num_words, num_entities))
 
-        X_enc = list(map(lambda x: [word2index[wx] for wx in x], X))
-        Y_enc = list(map(lambda y: [labels2index[wy] for wy in y], Y))
+        X_enc = [[word2index[wrd] for wrd in sentence] for sentence in X]
+        X_pad = pad_sequences(maxlen=self.MAX_LEN, sequences=X_enc, padding="post", value=word2index['<END-PAD>'])
 
-        # print(Y_enc[1])
-        # print(to_categorical(Y_enc[1], num_classes=num_entities))
+        Y_enc = [[labels2index[lbl] for lbl in sentence] for sentence in Y]
+        Y_pad = pad_sequences(maxlen=self.MAX_LEN, sequences=Y_enc, padding="post", value=labels2index['O'])
 
-        Y_one_hot_encode = list(map(lambda item: to_categorical(item, num_classes=num_entities), Y_enc))
+        Y_one_hot_enc = list(map(lambda item: to_categorical(item, num_classes=num_entities), Y_pad))
 
-        X_all = pad_sequences(sequences=X_enc, maxlen=self.MAX_LEN)
-        Y_all = pad_sequences(sequences=Y_one_hot_encode, maxlen=self.MAX_LEN)
-
-        return X_all, Y_all, num_entities, num_words
+        return X_pad, Y_one_hot_enc, num_entities, num_words
 
     def input_dataset(self, argument):
         switcher = {

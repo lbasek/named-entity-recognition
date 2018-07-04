@@ -1,7 +1,8 @@
 import numpy as np
 from datetime import datetime
-from keras.models import Model, Input
-from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
+from keras import Sequential
+from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional, Activation
+from keras.utils.vis_utils import plot_model
 
 
 class NeuralNetwork(object):
@@ -17,22 +18,24 @@ class NeuralNetwork(object):
         self.Y_test = Y_test
 
     def train(self):
-        input = Input(shape=(120,))
-        model = Embedding(input_dim=self.num_words, output_dim=50, input_length=120)(input)
-        model = Dropout(0.1)(model)
-        model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(model)
-        out = TimeDistributed(Dense(self.num_entities, activation="softmax"))(model)
+        model = Sequential()
+        model.add(Embedding(input_dim=self.num_words, output_dim=120, input_length=120))
+        model.add(Dropout(0.1))
+        model.add(Bidirectional(LSTM(units=120, return_sequences=True, recurrent_dropout=0.1)))
+        model.add(TimeDistributed(Dense(self.num_entities)))
+        model.add(Activation('softmax'))
 
-        model = Model(input, out)
+        plot_model(model, to_file='../models/ner_' + str(datetime.utcnow().microsecond) + '.png')
+        print(model.summary())
 
-        model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=["accuracy"])
+        model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
-        history = model.fit(x=self.X_train, y=np.array(self.Y_train), batch_size=64, epochs=10,
-                            validation_data=(self.X_validation, self.Y_validation))
+        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=5, validation_split=0.2)
 
         model.save("../models/ner_" + str(datetime.utcnow().microsecond))
 
-        test_eval = model.evaluate(self.X_test, self.Y_test, verbose=0)
+        # TODO wtf?
+        test_eval = model.evaluate(self.X_test, np.array(self.Y_test))
         print('Test loss:', test_eval[0])
         print('Test accuracy:', test_eval[1])
 
