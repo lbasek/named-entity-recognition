@@ -3,6 +3,8 @@ from datetime import datetime
 from keras import Sequential
 from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional, Activation
 from keras.utils.vis_utils import plot_model
+from tensorflow import keras
+from keras.callbacks import TensorBoard
 
 
 class NeuralNetwork(object):
@@ -29,8 +31,10 @@ class NeuralNetwork(object):
         print(model.summary())
 
         model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
+        tensorboard_callback = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
 
-        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=5, validation_split=0.2)
+        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=5, validation_split=0.2,
+                            callbacks=[tensorboard_callback])
 
         model.save("../models/ner_" + str(datetime.utcnow().microsecond))
 
