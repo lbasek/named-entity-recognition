@@ -2,27 +2,29 @@ import itertools
 import pandas as pd
 from keras.utils import to_categorical
 from keras_preprocessing.sequence import pad_sequences
-from enum import Enum
 import matplotlib.pyplot as plt
 from utils.sentence_getter import SentenceGetter
+
+TRAIN = '../dataset/csv/train.csv'
+TEST = '../dataset/csv/test.csv'
+VALIDATION = '../dataset/csv/valid.csv'
 
 
 class Preprocessing(object):
 
-    def __init__(self, train_filename, test_filename, validation_filename):
-        self.train_filename = train_filename
-        self.test_filename = test_filename
-        self.validation_filename = validation_filename
-        # TODO maxlen
+    def __init__(self):
         self.MAX_LEN = 120
 
-    def create_input(self, dataset):
+    def create_input(self):
 
-        input_dataset = self.input_dataset(dataset)
+        train = pd.read_csv(TRAIN, encoding='utf-8')
+        valid = pd.read_csv(VALIDATION, encoding='utf-8')
+        test = pd.read_csv(TEST, encoding='utf-8')
 
-        data = pd.read_csv(input_dataset, encoding='utf-8')
+        frames = [train, valid, test]
+        result = pd.concat(frames)
 
-        sentence_getter = SentenceGetter(data=data)
+        sentence_getter = SentenceGetter(data=result)
 
         sentences = sentence_getter.sentences
 
@@ -68,26 +70,3 @@ class Preprocessing(object):
         Y_one_hot_enc = list(map(lambda item: to_categorical(item, num_classes=num_entities), Y_pad))
 
         return X_pad, Y_one_hot_enc, num_entities, num_words
-
-    def input_dataset(self, argument):
-        switcher = {
-            Dataset.train: self.train(),
-            Dataset.test: self.test(),
-            Dataset.validation: self.validation()
-        }
-        return switcher.get(argument, "NULL")
-
-    def train(self):
-        return self.train_filename
-
-    def test(self):
-        return self.test_filename
-
-    def validation(self):
-        return self.validation_filename
-
-
-class Dataset(Enum):
-    train = 1
-    test = 2
-    validation = 3

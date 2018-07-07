@@ -33,12 +33,12 @@ class NeuralNetwork(object):
         model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
         tensorboard_callback = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
 
-        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=5, validation_split=0.2,
+        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=10,
+                            validation_data=(self.X_validation, np.array(self.Y_validation)),
                             callbacks=[tensorboard_callback])
 
         model.save("../models/ner_" + str(datetime.utcnow().microsecond))
 
-        # TODO wtf?
         test_eval = model.evaluate(self.X_test, np.array(self.Y_test))
         print('Test loss:', test_eval[0])
         print('Test accuracy:', test_eval[1])
