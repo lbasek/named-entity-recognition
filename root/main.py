@@ -1,17 +1,13 @@
 import matplotlib.pyplot as plt
 from root.model import NeuralNetwork
-from root.preprocessing import Preprocessing
-from sklearn.model_selection import train_test_split
+from root.dataset.api import load_dataset
 
-preprocessing = Preprocessing()
+text_vocab, labels_vocab, train, val, test = load_dataset()
 
-All_X_train, All_Y_train, num_entities, num_words = preprocessing.create_input()
+num_words = len(text_vocab.itos)
+num_entities = len(labels_vocab.itos)
 
-X_rest, X_validation, y_rest, Y_validation = train_test_split(All_X_train, All_Y_train, test_size=0.2, train_size=0.8)
-
-X_train, X_test, Y_train, Y_test = train_test_split(X_rest, y_rest, test_size=0.25, train_size=0.75)
-
-nn = NeuralNetwork(num_words, num_entities, X_train, Y_train, X_validation, Y_validation, X_test, Y_test)
+nn = NeuralNetwork(num_words, num_entities, train.X, train.y, val.X, val.y, test.X, test.y)
 model, history = nn.train()
 
 print(history.history.keys())
