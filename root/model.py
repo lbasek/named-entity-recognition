@@ -27,7 +27,7 @@ class NeuralNetwork(object):
         model.add(TimeDistributed(Dense(self.num_entities)))
         model.add(Activation('softmax'))
 
-        plot_model(model, to_file='../models/ner_' + str(datetime.utcnow().microsecond) + '.png')
+        plot_model(model, to_file='../models/ner_model_image.png')
         print(model.summary())
 
         model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
@@ -37,7 +37,7 @@ class NeuralNetwork(object):
                             validation_data=(self.X_validation, np.array(self.Y_validation)),
                             callbacks=[tensorboard_callback])
 
-        model.save("../models/ner_" + str(datetime.utcnow().microsecond))
+        model.save("../models/ner_model")
 
         test_eval = model.evaluate(self.X_test, np.array(self.Y_test))
         print('Test loss:', test_eval[0])
