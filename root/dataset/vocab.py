@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK
+from root.constants import PAD, UNK, UNK_LBL
 
 
 class Vocab(ABC):
@@ -48,7 +48,8 @@ class LabelVocab(Vocab):
             unique_labels.update(labels)
 
         vocab = LabelVocab()
-        vocab._itos = list(unique_labels)
-        vocab._stoi = {k: v for v, k in enumerate(vocab.itos)}
+        vocab._itos = [UNK_LBL] + list(unique_labels)
+        vocab._stoi = defaultdict(lambda: 0)
+        vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab

@@ -1,8 +1,7 @@
-import numpy as np
 from collections import namedtuple
 from .vocab import TextVocab, LabelVocab
 from .data_processor import numericalize
-from root.constants import PAD, NO_ENTITY_TOKEN
+from root.constants import PAD, UNK_LBL
 from keras.utils import to_categorical
 
 
@@ -54,18 +53,13 @@ def load_examples(file_path):
 
 
 def one_hot_encode(matrix, num_classes):
-    one_hot = None
-    for row in matrix:
-        row_one_hot = to_categorical(row, num_classes=num_classes)[np.newaxis, ...]
-        one_hot = row_one_hot if one_hot is None else np.concatenate([one_hot, row_one_hot], axis=0)
-        #print(one_hot.shape)
-        #print(row_one_hot.shape)
+    one_hot = [to_categorical(row, num_classes=num_classes) for row in matrix]
     return one_hot
 
 
 def create_dataset(examples, text_vocab, labels_vocab):
     X = numericalize(text_vocab, map(lambda e: e.sentence, examples), pad_token=PAD)
-    y = numericalize(labels_vocab, map(lambda e: e.labels, examples), pad_token=NO_ENTITY_TOKEN)
+    y = numericalize(labels_vocab, map(lambda e: e.labels, examples), pad_token=UNK_LBL)
     y = one_hot_encode(y.tolist(), len(labels_vocab.itos))
     return Dataset(X, y)
 

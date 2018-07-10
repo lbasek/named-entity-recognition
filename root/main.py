@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from root.model import NeuralNetwork
 from root.dataset.api import load_dataset
+from root.test_model import test_model
 
 text_vocab, labels_vocab, train, val, test = load_dataset()
 
@@ -11,6 +12,8 @@ nn = NeuralNetwork(num_words, num_entities, train.X, train.y, val.X, val.y, test
 model, history = nn.train()
 
 print(history.history.keys())
+
+test_model(test.X, test.y, text_vocab, labels_vocab)
 
 # Plot accuracy
 plt.plot(history.history['acc'])
