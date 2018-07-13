@@ -10,7 +10,7 @@ class Dataset:
         self.output_filename = output_filename
         self.data_frame = pd.DataFrame(columns=['Sentence #', 'Word', 'POS', 'Chunk', 'Tag'])
 
-    def create(self):
+    def create_csv(self):
 
         if not os.path.isdir("./csv") or not os.path.exists(self.filename):
             raise ValueError("Filename or csv dir is wrong.")
@@ -51,4 +51,4 @@ class Dataset:
 
 if __name__ == '__main__':
     dataset = Dataset("./raw/test.txt", "./csv/test")
-    dataset.create()
+    dataset.create_csv()
