@@ -102,9 +102,17 @@ def plot_classification_report(classification_report, title='Classification repo
     plotMat = []
     support = []
     class_names = []
-    for line in lines[2: (len(lines) - 2)]:
+    for line in reversed(lines[2: (len(lines))]):
         t = line.strip().split()
-        if len(t) < 2: continue
+        if not t:
+            continue
+
+        if len(t) < 2:
+            continue
+
+        if t[0] == 'avg':
+            t[0:3] = [''.join(t[0:3]).upper()]
+
         classes.append(t[0])
         v = [float(x) for x in t[1: len(t) - 1]]
         support.append(int(t[-1]))

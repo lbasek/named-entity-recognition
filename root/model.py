@@ -1,6 +1,6 @@
 import numpy as np
 from keras import Sequential
-from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional, Activation
+from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional, Activation, GRU
 from keras.utils.vis_utils import plot_model
 from keras.callbacks import TensorBoard
 
@@ -17,11 +17,13 @@ class NeuralNetwork(object):
         self.X_test = X_test
         self.Y_test = Y_test
 
-    def train(self):
+    def train(self, epochs):
         model = Sequential()
         model.add(Embedding(input_dim=self.num_words, output_dim=120))
         model.add(Dropout(0.1))
-        model.add(Bidirectional(LSTM(units=120, return_sequences=True, recurrent_dropout=0.1)))
+        # model.add(Bidirectional(LSTM(units=120, return_sequences=True, recurrent_dropout=0.1)))
+        # model.add(GRU(units=120, dropout=0.1, return_sequences=True))
+        model.add(Bidirectional(GRU(units=120, dropout=0.1, return_sequences=True)))
         model.add(TimeDistributed(Dense(self.num_entities)))
         model.add(Activation('softmax'))
 
@@ -31,7 +33,7 @@ class NeuralNetwork(object):
         model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
         tensorboard_callback = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
 
-        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=5,
+        history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=epochs,
                             validation_data=(self.X_validation, np.array(self.Y_validation)),
                             callbacks=[tensorboard_callback])
 

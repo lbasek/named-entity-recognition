@@ -9,7 +9,7 @@ num_words = len(text_vocab.itos)
 num_entities = len(labels_vocab.itos)
 
 nn = NeuralNetwork(num_words, num_entities, train.X, train.y, val.X, val.y, test.X, test.y)
-model, history = nn.train()
+model, history = nn.train(epochs=5)
 
 print(history.history.keys())
 
