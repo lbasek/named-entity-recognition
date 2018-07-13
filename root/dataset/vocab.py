@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK, UNK_LBL, UNK_POS
+from root.constants import PAD, UNK, UNK_LBL
 
 
 class Vocab(ABC):
@@ -63,8 +63,7 @@ class PosVocab(Vocab):
             unique_pos.update(pos)
 
         vocab = PosVocab()
-        vocab._itos = [UNK_POS] + list(unique_pos)
-        vocab._stoi = defaultdict(lambda: 0)
+        vocab._itos = list(unique_pos)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
