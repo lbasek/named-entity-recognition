@@ -40,5 +40,5 @@ def test_model(X_test, y_test, text_vocab, labels_vocab):
     print(report)
 
     plot_classification_report(report)
-    plt.savefig('classification_report.png', dpi=200, format='png', bbox_inches='tight')
+    plt.savefig('../results/classification_report.png', dpi=200, format='png', bbox_inches='tight')
     plt.close()

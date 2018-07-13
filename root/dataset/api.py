@@ -1,5 +1,5 @@
 from collections import namedtuple
-from .vocab import TextVocab, LabelVocab
+from .vocab import TextVocab, LabelVocab, PosVocab
 from .data_processor import numericalize
 from root.constants import PAD, UNK_LBL
 from keras.utils import to_categorical
@@ -14,12 +14,13 @@ def load_dataset():
     # build vocabularies
     text_vocab = TextVocab.build(list(map(lambda e: e.sentence, train_examples)))
     labels_vocab = LabelVocab.build(list(map(lambda e: e.labels, train_examples)))
+    pos_vocab = PosVocab.build(list(map(lambda e: e.pos, train_examples)))
 
     train_set = create_dataset(train_examples, text_vocab, labels_vocab)
     val_set = create_dataset(val_examples, text_vocab, labels_vocab)
     test_set = create_dataset(test_examples, text_vocab, labels_vocab)
 
-    return text_vocab, labels_vocab, train_set, val_set, test_set
+    return text_vocab, labels_vocab, pos_vocab, train_set, val_set, test_set
 
 
 def load_examples(file_path):
@@ -32,6 +33,7 @@ def load_examples(file_path):
     examples = []
     sentence = []
     labels = []
+    pos = []
 
     with open(file_path) as fd:
         for line in fd:
@@ -39,14 +41,17 @@ def load_examples(file_path):
             if line.startswith('-DOCSTART-'):
                 continue
             if not line:
-                if sentence and labels:
-                    examples.append(Example(sentence, labels))
+                if sentence and labels and pos:
+                    examples.append(Example(sentence, labels, pos))
                     sentence = []
                     labels = []
+                    pos = []
                 continue
 
             parts = line.split(' ')
+
             sentence.append(parts[0])
+            pos.append(parts[2])
             labels.append(parts[3])
 
     return examples
@@ -64,5 +69,5 @@ def create_dataset(examples, text_vocab, labels_vocab):
     return Dataset(X, y)
 
 
-Example = namedtuple('Example', 'sentence labels')
+Example = namedtuple('Example', 'sentence labels pos')
 Dataset = namedtuple('Dataset', 'X y')

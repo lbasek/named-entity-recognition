@@ -65,4 +65,4 @@ __pycache__
 
 embedding/*.txt
 models/*
-root/logs/*
+results/*
