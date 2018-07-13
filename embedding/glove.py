@@ -27,3 +27,5 @@ def get_pretrained_glove(num_words, text_vocab):
         if embedding_vector is not None:
             # words not found in embedding index will be zero
             embedding_matrix[index] = embedding_vector
+
+    return embedding_matrix
