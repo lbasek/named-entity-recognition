@@ -3,7 +3,6 @@ import itertools
 import numpy as np
 from keras.models import load_model
 from sklearn.metrics import classification_report
-from root.constants import UNK_LBL, NO_ENTITY_TOKEN
 import matplotlib.pyplot as plt
 
 from utils.plot_classification_report_util import plot_classification_report
@@ -31,10 +30,6 @@ def test_model(X_test, y_test, text_vocab, labels_vocab):
     # Remove padding label
     keys = list(labels_vocab.stoi.keys())
     values = list(labels_vocab.stoi.values())
-    values.remove(labels_vocab.stoi[UNK_LBL])
-    keys.remove(UNK_LBL)
-    values.remove(labels_vocab.stoi[NO_ENTITY_TOKEN])
-    keys.remove(NO_ENTITY_TOKEN)
 
     report = classification_report(true_values, predicted_values, labels=values, target_names=keys)
     print(report)

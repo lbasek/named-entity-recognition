@@ -1,7 +1,7 @@
 from collections import namedtuple
 from .vocab import TextVocab, LabelVocab, PosVocab
 from .data_processor import numericalize
-from root.constants import PAD, UNK_LBL
+from root.constants import PAD, NO_ENTITY_TOKEN
 from keras.utils import to_categorical
 
 
@@ -64,7 +64,7 @@ def one_hot_encode(matrix, num_classes):
 
 def create_dataset(examples, text_vocab, labels_vocab):
     X = numericalize(text_vocab, map(lambda e: e.sentence, examples), pad_token=PAD)
-    y = numericalize(labels_vocab, map(lambda e: e.labels, examples), pad_token=UNK_LBL)
+    y = numericalize(labels_vocab, map(lambda e: e.labels, examples), pad_token=NO_ENTITY_TOKEN)
     y = one_hot_encode(y.tolist(), len(labels_vocab.itos))
     return Dataset(X, y)
 

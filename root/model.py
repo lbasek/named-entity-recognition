@@ -28,7 +28,7 @@ class NeuralNetwork(object):
         model.add(Dropout(0.1))
         # model.add(LSTM(units=100, dropout=0.1, return_sequences=True, recurrent_dropout=0.1, use_bias=True))
         # model.add(GRU(units=120, dropout=0.1, return_sequences=True))
-        model.add(Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1, )))
+        model.add(Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1)))
         # model.add(
         #     Bidirectional(GRU(units=100, dropout=0.1, return_sequences=True, recurrent_dropout=0.1, use_bias=True)))
         model.add(TimeDistributed(Dense(self.num_entities)))

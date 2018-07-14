@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK, UNK_LBL
+from root.constants import PAD, UNK
 
 
 class Vocab(ABC):
@@ -33,8 +33,8 @@ class TextVocab(Vocab):
         words_and_freqs = counter.most_common(max_size)
 
         vocab = TextVocab()
-        vocab._itos = [UNK, PAD] + list(map(lambda t: t[0], words_and_freqs))
-        vocab._stoi = defaultdict(lambda: 0)  # index of UNK token
+        vocab._itos = [PAD, UNK] + list(map(lambda t: t[0], words_and_freqs))
+        vocab._stoi = defaultdict(lambda: 1)  # index of UNK token
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
@@ -48,8 +48,7 @@ class LabelVocab(Vocab):
             unique_labels.update(labels)
 
         vocab = LabelVocab()
-        vocab._itos = [UNK_LBL] + list(unique_labels)
-        vocab._stoi = defaultdict(lambda: 0)
+        vocab._itos = list(unique_labels)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
