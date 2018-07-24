@@ -44,17 +44,17 @@ class NeuralNetwork(object):
         # model.compile(optimizer="rmsprop", loss='categorical_crossentropy', metrics=['accuracy'])
 
         txt_input = Input(shape=(MAX_LEN,), name='txt_input')
-        txt_embed = Embedding(input_dim=self.num_words, output_dim=MAX_LEN, input_length=MAX_LEN, name='txt_embedding', mask_zero=True,
+        txt_embed = Embedding(input_dim=self.num_words, output_dim=MAX_LEN, input_length=MAX_LEN, name='txt_embedding',
                               trainable=False, weights=([embedding]))(txt_input)
         txt_drpot = Dropout(0.1, name='txt_dropout')(txt_embed)
 
         pos_input = Input(shape=(MAX_LEN,), name='pos_input')
-        pos_embed = Embedding(input_dim=self.num_pos, output_dim=MAX_LEN, input_length=MAX_LEN, name='pos_embedding', mask_zero=True)(
+        pos_embed = Embedding(input_dim=self.num_pos, output_dim=MAX_LEN, input_length=MAX_LEN, name='pos_embedding')(
             pos_input)
         pos_drpot = Dropout(0.1, name='pos_dropout')(pos_embed)
 
         chunk_input = Input(shape=(MAX_LEN,), name='chunk_input')
-        chunk_embed = Embedding(input_dim=self.num_chunk, output_dim=MAX_LEN, input_length=MAX_LEN, name='chunk_embedding', mask_zero=True)(
+        chunk_embed = Embedding(input_dim=self.num_chunk, output_dim=MAX_LEN, input_length=MAX_LEN, name='chunk_embedding')(
             chunk_input)
         chunk_drpot = Dropout(0.1, name='chunk_dropout')(chunk_embed)
 

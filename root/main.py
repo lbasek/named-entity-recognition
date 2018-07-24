@@ -14,7 +14,7 @@ num_chunk = len(chunk_vocab.itos)
 
 nn = NeuralNetwork(num_words, num_entities, num_pos, num_chunk, train, test, val)
 
-model, history = nn.train(epochs=3, embedding=get_pretrained_glove(num_words, text_vocab))
+model, history = nn.train(epochs=5, embedding=get_pretrained_glove(num_words, text_vocab))
 
 print(history.history.keys())
 

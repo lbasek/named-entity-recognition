@@ -23,10 +23,10 @@ def test_model(test, text_vocab, labels_vocab):
     keys = list(labels_vocab.stoi.keys())
     values = list(labels_vocab.stoi.values())
 
-    # values.remove(labels_vocab.stoi[NO_ENTITY_TOKEN])
-    # keys.remove(NO_ENTITY_TOKEN)
+    values.remove(labels_vocab.stoi[NO_ENTITY_TOKEN])
+    keys.remove(NO_ENTITY_TOKEN)
 
-    report = classification_report(true_values, predicted_values, labels=values, target_names=keys)
+    report = classification_report(true_values, predicted_values, labels=values, target_names=keys, digits=4)
     print(report)
 
     plot_classification_report(report)
