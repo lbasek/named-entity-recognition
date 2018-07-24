@@ -1,8 +1,8 @@
 from collections import namedtuple
-from .vocab import TextVocab, LabelVocab, PosVocab
-from .data_processor import numericalize
-from root.constants import NO_ENTITY_TOKEN, UNK, MAX_LEN, PAD
 from keras.utils import to_categorical
+from root.constants import NO_ENTITY_TOKEN, MAX_LEN, PAD
+from .data_processor import numericalize
+from .vocab import TextVocab, LabelVocab, PosVocab
 
 
 def load_dataset():
@@ -16,9 +16,9 @@ def load_dataset():
     labels_vocab = LabelVocab.build(list(map(lambda e: e.labels, train_examples)))
     pos_vocab = PosVocab.build(list(map(lambda e: e.pos, train_examples)))
 
-    train_set = create_dataset(train_examples, text_vocab, labels_vocab)
-    val_set = create_dataset(val_examples, text_vocab, labels_vocab)
-    test_set = create_dataset(test_examples, text_vocab, labels_vocab)
+    train_set = create_dataset(train_examples, text_vocab, labels_vocab, pos_vocab)
+    val_set = create_dataset(val_examples, text_vocab, labels_vocab, pos_vocab)
+    test_set = create_dataset(test_examples, text_vocab, labels_vocab, pos_vocab)
 
     return text_vocab, labels_vocab, pos_vocab, train_set, val_set, test_set
 
@@ -62,12 +62,16 @@ def one_hot_encode(matrix, num_classes):
     return one_hot
 
 
-def create_dataset(examples, text_vocab, labels_vocab):
+def create_dataset(examples, text_vocab, labels_vocab, pos_vocab):
     X = numericalize(text_vocab, map(lambda e: e.sentence, examples), pad_token=PAD, maxlen=MAX_LEN)
+
     y = numericalize(labels_vocab, map(lambda e: e.labels, examples), pad_token=NO_ENTITY_TOKEN, maxlen=MAX_LEN)
     y = one_hot_encode(y.tolist(), len(labels_vocab.itos))
-    return Dataset(X, y)
+
+    pos = numericalize(pos_vocab, map(lambda e: e.pos, examples), pad_token=PAD, maxlen=MAX_LEN)
+
+    return Dataset(X, y, pos)
 
 
 Example = namedtuple('Example', 'sentence labels pos')
-Dataset = namedtuple('Dataset', 'X y')
+Dataset = namedtuple('Dataset', 'X y pos')
