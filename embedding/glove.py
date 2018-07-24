@@ -1,6 +1,8 @@
 import sys
 import numpy as np
 
+from root.constants import MAX_LEN
+
 GLOVE_DIR = '../embedding/glove.6B.100d.txt'
 
 
@@ -20,12 +22,11 @@ def get_pretrained_glove(num_words, text_vocab):
 
     f.close()
 
-    embedding_matrix = np.zeros((num_words, 100))
+    embedding_matrix = np.zeros((num_words, MAX_LEN))
 
     for index, word in enumerate(text_vocab.itos):
         embedding_vector = embeddings_index.get(word.lower())
         if embedding_vector is not None:
-            # words not found in embedding index will be zero
             embedding_matrix[index] = embedding_vector
 
     return embedding_matrix

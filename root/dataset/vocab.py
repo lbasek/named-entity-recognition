@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK
+from root.constants import UNK, UNK_POS, PAD
 
 
 class Vocab(ABC):
     def __init__(self):
-        self._stoi = {}
+        self._stoi = dict()
         self._itos = []
 
     @property
@@ -33,8 +33,8 @@ class TextVocab(Vocab):
         words_and_freqs = counter.most_common(max_size)
 
         vocab = TextVocab()
-        vocab._itos = [PAD, UNK] + list(map(lambda t: t[0], words_and_freqs))
-        vocab._stoi = defaultdict(lambda: 1)  # index of UNK token
+        vocab._itos = [UNK] + list(map(lambda t: t[0], words_and_freqs))
+        vocab._stoi = defaultdict(lambda: 0)  # index of UNK token
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
@@ -48,7 +48,8 @@ class LabelVocab(Vocab):
             unique_labels.update(labels)
 
         vocab = LabelVocab()
-        vocab._itos = list(unique_labels)
+        vocab._itos = list(sorted(unique_labels))
+        vocab._stoi = defaultdict(lambda: 0)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
@@ -62,7 +63,8 @@ class PosVocab(Vocab):
             unique_pos.update(pos)
 
         vocab = PosVocab()
-        vocab._itos = list(unique_pos)
+        vocab._itos = [UNK_POS] + list(sorted(unique_pos))
+        vocab._stoi = defaultdict(lambda: 0)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
