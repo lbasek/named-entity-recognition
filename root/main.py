@@ -13,7 +13,7 @@ num_pos = len(pos_vocab.itos)
 
 nn = NeuralNetwork(num_words, num_entities, train.X, train.y, val.X, val.y, test.X, test.y)
 
-model, history = nn.train(epochs=5, embedding=get_pretrained_glove(num_words, text_vocab))
+model, history = nn.train(epochs=2, embedding=get_pretrained_glove(num_words, text_vocab))
 
 print(history.history.keys())
 
