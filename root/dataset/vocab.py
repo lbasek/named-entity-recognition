@@ -34,10 +34,14 @@ class TextVocab(Vocab):
 
         vocab = TextVocab()
         vocab._itos = [PAD, UNK] + list(map(lambda t: t[0], words_and_freqs))
-        vocab._stoi = defaultdict(lambda: 1)  # index of UNK token
+        vocab._stoi = defaultdict(_unk_token_idx)  # index of UNK token
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
+
+
+def _unk_token_idx():
+    return 1
 
 
 class LabelVocab(Vocab):

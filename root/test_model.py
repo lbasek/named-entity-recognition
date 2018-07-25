@@ -9,8 +9,8 @@ from root.constants import NO_ENTITY_TOKEN
 from utils.plot_classification_report_util import plot_classification_report
 
 
-def test_model(X_test, y_test, text_vocab, labels_vocab):
-    model = load_model('../models/ner_model')
+def test_model(model_path, X_test, y_test, text_vocab, labels_vocab):
+    model = load_model(model_path + 'ner_model')
 
     predicted_values = np.argmax(model.predict(X_test), axis=-1)
     true_values = np.argmax(y_test, -1)

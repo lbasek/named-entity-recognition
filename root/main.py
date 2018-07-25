@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from datetime import datetime
+from utils.serialization import save_object
 
 from embedding.glove import get_pretrained_glove
 from root.dataset.api import load_dataset
@@ -11,13 +13,18 @@ num_words = len(text_vocab.itos)
 num_entities = len(labels_vocab.itos)
 num_pos = len(pos_vocab.itos)
 
-nn = NeuralNetwork(num_words, num_entities, train.X, train.y, val.X, val.y, test.X, test.y)
+# save vocabulary
+save_path = '../models/' + datetime.now().strftime("%Y-%m-%d-%H:%M") + '/'
+save_object(text_vocab, save_path + 'text_vocab')
+save_object(labels_vocab, save_path + 'labels_vocab')
 
-model, history = nn.train(epochs=2, embedding=get_pretrained_glove(num_words, text_vocab))
+nn = NeuralNetwork(save_path, num_words, num_entities, train.X, train.y, val.X, val.y, test.X, test.y)
+
+model, history = nn.train(epochs=1, embedding=get_pretrained_glove(num_words, text_vocab))
 
 print(history.history.keys())
 
-test_model(test.X, test.y, text_vocab, labels_vocab)
+test_model(save_path, test.X, test.y, text_vocab, labels_vocab)
 
 # Plot accuracy
 plt.plot(history.history['acc'])
