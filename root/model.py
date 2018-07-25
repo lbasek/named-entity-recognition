@@ -9,7 +9,8 @@ from root.constants import MAX_LEN
 
 class NeuralNetwork(object):
 
-    def __init__(self, num_words, num_entities, X_train, Y_train, X_validation, Y_validation, X_test, Y_test):
+    def __init__(self, save_path, num_words, num_entities, X_train, Y_train, X_validation, Y_validation, X_test, Y_test):
+        self.save_path = save_path
         self.num_words = num_words
         self.num_entities = num_entities
         self.X_train = X_train
@@ -20,8 +21,8 @@ class NeuralNetwork(object):
         self.Y_test = Y_test
 
     def train(self, epochs, embedding=None):
-        txt_input = Input(shape=(MAX_LEN,), name='txt_input')
-        txt_embed = Embedding(input_dim=self.num_words, output_dim=MAX_LEN, input_length=MAX_LEN, name='txt_embedding',
+        txt_input = Input(shape=(None,), name='txt_input')
+        txt_embed = Embedding(input_dim=self.num_words, output_dim=MAX_LEN, input_length=None, name='txt_embedding',
                               weights=([embedding]), trainable=False, mask_zero=True)(txt_input)
         txt_drpot = Dropout(0.1, name='txt_dropout')(txt_embed)
 
@@ -43,7 +44,7 @@ class NeuralNetwork(object):
         history = model.fit(self.X_train, np.array(self.Y_train), batch_size=32, epochs=epochs,
                             validation_data=(self.X_validation, np.array(self.Y_validation)), callbacks=[tensorboard_callback])
 
-        model.save("../models/ner_model")
+        model.save(self.save_path + 'ner_model')
 
         test_eval = model.evaluate(self.X_test, np.array(self.Y_test))
         print('Test loss:', test_eval[0])
