@@ -14,7 +14,8 @@ from utils.plot_confusion_matrix_util import plot_confusion_matrix
 def test_model(test, text_vocab, labels_vocab):
     model = load_model('../models/ner_model')
 
-    predicted_values = np.argmax(model.predict([test.X, test.pos, test.chunk]), axis=-1)
+    predicted_values = np.argmax(model.predict([test.X, test.pos, np.array(test.characters).reshape((len(test.characters), 100, 10))]),
+                                 axis=-1)
     true_values = np.argmax(test.y, -1)
 
     # flatten to single array with class labels
