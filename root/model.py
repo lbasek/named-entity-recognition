@@ -9,16 +9,25 @@ from root.constants import MAX_LEN
 
 class NeuralNetwork(object):
 
-    def __init__(self, save_path, num_words, num_entities, X_train, Y_train, X_validation, Y_validation, X_test, Y_test):
+    def __init__(self, save_path, num_words, num_entities, num_pos, num_chunk, train, test, validation):
         self.save_path = save_path
         self.num_words = num_words
         self.num_entities = num_entities
-        self.X_train = X_train
-        self.Y_train = Y_train
-        self.X_validation = X_validation
-        self.Y_validation = Y_validation
-        self.X_test = X_test
-        self.Y_test = Y_test
+        self.num_pos = num_pos
+        self.num_chunk = num_chunk
+        self.X_train = train.X
+        self.Y_train = train.y
+        self.X_validation = validation.X
+        self.Y_validation = validation.y
+        self.X_test = test.X
+        self.Y_test = test.y
+        self.train_pos = train.pos
+        self.test_pos = test.pos
+        self.valid_pos = validation.pos
+
+        self.train_chunk = train.chunk
+        self.test_chunk = test.chunk
+        self.valid_chunk = validation.chunk
 
     def train(self, epochs, embedding=None):
         txt_input = Input(shape=(None,), name='txt_input')

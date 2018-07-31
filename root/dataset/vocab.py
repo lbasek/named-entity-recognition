@@ -66,7 +66,23 @@ class PosVocab(Vocab):
             unique_pos.update(pos)
 
         vocab = PosVocab()
-        vocab._itos = list(unique_pos)
+        vocab._itos = [PAD] + list(unique_pos)
+        vocab._stoi = defaultdict(lambda: 1)
+        vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
+
+        return vocab
+
+
+class ChunkVocab(Vocab):
+    @staticmethod
+    def build(sentences):
+        unique_chunk = set()
+        for chunk in sentences:
+            unique_chunk.update(chunk)
+
+        vocab = ChunkVocab()
+        vocab._itos = [PAD] + list(unique_chunk)
+        vocab._stoi = defaultdict(lambda: 1)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
