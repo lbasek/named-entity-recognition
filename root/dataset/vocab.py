@@ -69,16 +69,14 @@ class PosVocab(Vocab):
         return vocab
 
 
-class ChunkVocab(Vocab):
+class CharacterVocab(Vocab):
     @staticmethod
-    def build(sentences):
-        unique_chunk = set()
-        for chunk in sentences:
-            unique_chunk.update(chunk)
+    def build(words):
+        vocab = CharacterVocab()
+        chars = list(map(lambda c: c, " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_()[]{}!?:;#'\"/\\%$`&=*+@^~|"))
 
-        vocab = ChunkVocab()
-        vocab._itos = [PAD] + list(unique_chunk)
-        vocab._stoi = defaultdict(lambda: 1)
+        vocab._itos = [PAD, UNK] + chars
+        vocab._stoi = defaultdict(lambda: 2)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab

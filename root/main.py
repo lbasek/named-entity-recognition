@@ -5,16 +5,16 @@ from root.dataset.api import load_dataset
 from root.model import NeuralNetwork
 from root.test_model import test_model
 
-text_vocab, labels_vocab, pos_vocab, chunk_vocab, train, val, test = load_dataset()
+text_vocab, labels_vocab, pos_vocab, character_vocab, train, val, test = load_dataset()
 
 num_words = len(text_vocab.itos)
 num_entities = len(labels_vocab.itos)
 num_pos = len(pos_vocab.itos)
-num_chunk = len(chunk_vocab.itos)
+num_chars = len(character_vocab.itos)
 
-nn = NeuralNetwork(num_words, num_entities, num_pos, num_chunk, train, test, val)
+nn = NeuralNetwork(num_words, num_entities, num_pos, num_chars, train, test, val)
 
-model, history = nn.train(epochs=5, embedding=get_pretrained_glove(num_words, text_vocab))
+model, history = nn.train(epochs=1, embedding=get_pretrained_glove(num_words, text_vocab))
 
 print(history.history.keys())
 
