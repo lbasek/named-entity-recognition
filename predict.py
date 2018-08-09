@@ -1,16 +1,22 @@
+import os
 import argparse
 import spacy
 import numpy as np
 from keras.models import load_model
-from root.dataset.data_processor import numericalize
+from dataset.data_processor import numericalize
 from utils.serialization import load_object
-from root.constants import NO_ENTITY_TOKEN
+from constants import NO_ENTITY_TOKEN
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Script for using NER model')
     parser.add_argument('-p', '--path', help='Path to model and vocabulary directory.')
-    return parser.parse_args()
+
+    args = parser.parse_args()
+    # add path separator (/) at the end if needed
+    args.path = args.path if args.path[-1] == os.path.sep else args.path + os.path.sep
+
+    return args
 
 
 def main():

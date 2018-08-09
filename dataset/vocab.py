@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK
+from constants import PAD, UNK
 
 
 class Vocab(ABC):

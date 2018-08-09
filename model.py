@@ -7,7 +7,7 @@ from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidir
 from keras.utils.vis_utils import plot_model
 from keras.callbacks import TensorBoard
 
-from root.constants import MAX_LEN
+from constants import MAX_LEN
 
 
 class NeuralNetwork(object):
@@ -64,7 +64,7 @@ class NeuralNetwork(object):
 
         model.compile(optimizer="rmsprop", loss='categorical_crossentropy', metrics=['accuracy'])
 
-        plot_model(model, to_file='../models/ner_model_image.png')
+        plot_model(model, to_file='models/ner_model_image.png')
         print(model.summary())
 
         model.compile(optimizer="rmsprop", metrics=['accuracy'], loss='categorical_crossentropy')
@@ -93,16 +93,16 @@ class NeuralNetwork(object):
 
 
 def create_dir():
-    runs = ([x[0] for x in os.walk("../results/logs")])
+    runs = ([x[0] for x in os.walk("results/logs")])
     runs = [x for x in runs if "run" in x]
     runs = list(map(int, re.findall(r'\d+', "".join(runs))))
     runs.sort()
     if len(runs) == 0:
-        return "../results/logs/run1"
+        return "results/logs/run1"
 
     dir_idx = runs[-1] + 1
 
-    dir = "../results/logs/run" + str(dir_idx)
+    dir = "results/logs/run" + str(dir_idx)
 
     if not os.path.exists(dir):
         os.makedirs(dir)

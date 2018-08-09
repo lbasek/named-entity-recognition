@@ -5,7 +5,7 @@ import numpy as np
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, precision_recall_fscore_support
 
-from root.constants import MAX_LEN
+from constants import MAX_LEN
 from utils.classification_report import classification_report
 from utils.plot_confusion_matrix_util import plot_confusion_matrix
 
@@ -41,7 +41,7 @@ def test_model(model_path, test, text_vocab, labels_vocab):
     print(report)
 
     # plot_classification_report(report)
-    # plt.savefig('../results/classification_report.png', dpi=200, format='png', bbox_inches='tight')
+    # plt.savefig('results/classification_report.png', dpi=200, format='png', bbox_inches='tight')
     # plt.close()
 
     # Confusion Matrix
@@ -49,5 +49,5 @@ def test_model(model_path, test, text_vocab, labels_vocab):
     np.set_printoptions(precision=2)
     # TODO fix classes
     plot_confusion_matrix(cnf_matrix, classes=list(labels_vocab.stoi.keys()), normalize=True, title='Normalized confusion matrix')
-    plt.savefig('../results/confusion_matrix.png', dpi=200, format='png', bbox_inches='tight')
+    plt.savefig('results/confusion_matrix.png', dpi=200, format='png', bbox_inches='tight')
     plt.close()
