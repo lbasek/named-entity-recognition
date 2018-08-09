@@ -67,7 +67,7 @@ class PosVocab(Vocab):
 
         vocab = PosVocab()
         vocab._itos = [PAD] + list(unique_pos)
-        vocab._stoi = defaultdict(lambda: 1)
+        vocab._stoi = defaultdict(_unk_token_idx)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
@@ -80,7 +80,7 @@ class CharacterVocab(Vocab):
         chars = list(map(lambda c: c, " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_()[]{}!?:;#'\"/\\%$`&=*+@^~|"))
 
         vocab._itos = [PAD, UNK] + chars
-        vocab._stoi = defaultdict(lambda: 2)
+        vocab._stoi = defaultdict(_unk_token_idx)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab

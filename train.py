@@ -17,6 +17,8 @@ num_chars = len(character_vocab.itos)
 # save vocabulary
 save_path = 'models/' + datetime.now().strftime("%Y-%m-%d-%H:%M") + '/'
 save_object(text_vocab, save_path + 'text_vocab')
+save_object(pos_vocab, save_path + 'pos_vocab')
+save_object(character_vocab, save_path + 'char_vocab')
 save_object(labels_vocab, save_path + 'labels_vocab')
 
 nn = NeuralNetwork(save_path, num_words, num_entities, num_pos, num_chars, train, test, val)

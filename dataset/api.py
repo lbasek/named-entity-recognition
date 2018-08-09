@@ -55,8 +55,10 @@ def load_examples(file_path):
 
             sentence.append(parts[0])
 
-            if parts[1] in ['$', '"', '(', ')', "''", '.', ':', ',']:
-                pos.append('NN')
+            if parts[1] == '(':
+                pos.append('-LRB-')
+            elif parts[1] == ')':
+                pos.append('-RRB-')
             else:
                 pos.append(parts[1])
 
