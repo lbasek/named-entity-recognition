@@ -72,18 +72,17 @@ class NeuralNetwork(object):
         tensorboard_callback = TensorBoard(log_dir=dir, histogram_freq=0, write_graph=True, write_images=True)
 
         history = model.fit(
-            [self.X_train, self.train_pos, np.array(self.train_characters).reshape((len(self.train_characters), MAX_LEN, MAX_LEN_CHAR))],
+            [self.X_train, self.train_pos, self.train_characters],
             np.array(self.Y_train), batch_size=32, epochs=epochs,
             validation_data=(
-                [self.X_validation, self.valid_pos,
-                 np.array(self.valid_characters).reshape((len(self.valid_characters), MAX_LEN, MAX_LEN_CHAR))],
+                [self.X_validation, self.valid_pos, self.valid_characters],
                 np.array(self.Y_validation)),
             callbacks=[tensorboard_callback], verbose=1)
 
         model.save(self.save_path + 'ner_model')
 
         test_eval = model.evaluate(
-            [self.X_test, self.test_pos, np.array(self.test_characters).reshape((len(self.test_characters), MAX_LEN, MAX_LEN_CHAR))],
+            [self.X_test, self.test_pos, self.test_characters],
             np.array(self.Y_test))
         print('Test loss:', test_eval[0])
         print('Test accuracy:', test_eval[1])
