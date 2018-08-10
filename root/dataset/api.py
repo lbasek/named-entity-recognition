@@ -1,8 +1,10 @@
 import itertools
 from collections import namedtuple
+
+import numpy as np
 from keras.utils import to_categorical
 from keras_preprocessing.sequence import pad_sequences
-from root.constants import NO_ENTITY_TOKEN, MAX_LEN, PAD
+from root.constants import NO_ENTITY_TOKEN, MAX_LEN, PAD, MAX_LEN_CHAR
 from .data_processor import numericalize
 from .vocab import TextVocab, LabelVocab, PosVocab, CharacterVocab
 
@@ -80,9 +82,16 @@ def create_dataset(examples, text_vocab, labels_vocab, pos_vocab, character_voca
 
     characters = []
     for sentence in map(lambda e: e.sentence, examples):
-        characters.append(list(itertools.chain(*[[character_vocab.stoi[c] for c in word] for word in sentence])))
-
-    characters = pad_sequences(characters, padding='post', value=character_vocab.stoi[PAD], maxlen=1000)
+        sent_seq = []
+        for i in range(MAX_LEN):
+            word_seq = []
+            for j in range(MAX_LEN_CHAR):
+                try:
+                    word_seq.append(character_vocab.stoi[sentence[i][0][j]])
+                except:
+                    word_seq.append(character_vocab.stoi[PAD])
+            sent_seq.append(word_seq)
+        characters.append(np.array(sent_seq))
 
     return Dataset(X, y, pos, characters)
 

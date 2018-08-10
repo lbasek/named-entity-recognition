@@ -7,7 +7,7 @@ from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidir
 from keras.utils.vis_utils import plot_model
 from keras.callbacks import TensorBoard
 
-from root.constants import MAX_LEN
+from root.constants import MAX_LEN, MAX_LEN_CHAR
 
 
 class NeuralNetwork(object):
@@ -45,8 +45,8 @@ class NeuralNetwork(object):
         pos_drpot = Dropout(0.1, name='pos_dropout')(pos_embed)
 
         # Embedded Characters
-        char_in = Input(shape=(None, 10,), name="char_input")
-        emb_char = TimeDistributed(Embedding(input_dim=self.num_chars, output_dim=10, input_length=None))(char_in)
+        char_in = Input(shape=(None, MAX_LEN_CHAR,), name="char_input")
+        emb_char = TimeDistributed(Embedding(input_dim=self.num_chars, output_dim=MAX_LEN_CHAR, input_length=None))(char_in)
         char_enc = TimeDistributed(LSTM(units=20, return_sequences=False, recurrent_dropout=0.5))(emb_char)
 
         # Concatenate inputs
@@ -55,6 +55,7 @@ class NeuralNetwork(object):
 
         # Deep Layers
         model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(x)
+        model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(model)
         model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(model)
 
         # Output
@@ -73,17 +74,18 @@ class NeuralNetwork(object):
         tensorboard_callback = TensorBoard(log_dir=dir, histogram_freq=0, write_graph=True, write_images=True)
 
         history = model.fit(
-            [self.X_train, self.train_pos, np.array(self.train_characters).reshape((len(self.train_characters), MAX_LEN, 10))],
+            [self.X_train, self.train_pos, np.array(self.train_characters).reshape((len(self.train_characters), MAX_LEN, MAX_LEN_CHAR))],
             np.array(self.Y_train), batch_size=32, epochs=epochs,
             validation_data=(
-                [self.X_validation, self.valid_pos, np.array(self.valid_characters).reshape((len(self.valid_characters), MAX_LEN, 10))],
+                [self.X_validation, self.valid_pos,
+                 np.array(self.valid_characters).reshape((len(self.valid_characters), MAX_LEN, MAX_LEN_CHAR))],
                 np.array(self.Y_validation)),
             callbacks=[tensorboard_callback], verbose=1)
 
         model.save("../models/ner_model")
 
         test_eval = model.evaluate(
-            [self.X_test, self.test_pos, np.array(self.test_characters).reshape((len(self.test_characters), MAX_LEN, 10))],
+            [self.X_test, self.test_pos, np.array(self.test_characters).reshape((len(self.test_characters), MAX_LEN, MAX_LEN_CHAR))],
             np.array(self.Y_test))
         print('Test loss:', test_eval[0])
         print('Test accuracy:', test_eval[1])
