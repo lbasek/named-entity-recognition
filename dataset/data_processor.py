@@ -1,4 +1,3 @@
-from keras import preprocessing
 from keras_preprocessing.sequence import pad_sequences
 
 

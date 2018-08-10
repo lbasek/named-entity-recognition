@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict, Counter
-from root.constants import PAD, UNK
+from constants import PAD, UNK
 
 
 class Vocab(ABC):
@@ -34,10 +34,14 @@ class TextVocab(Vocab):
 
         vocab = TextVocab()
         vocab._itos = [PAD, UNK] + list(map(lambda t: t[0], words_and_freqs))
-        vocab._stoi = defaultdict(lambda: 1)  # index of UNK token
+        vocab._stoi = defaultdict(_unk_token_idx)  # index of UNK token
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
+
+
+def _unk_token_idx():
+    return 1
 
 
 class LabelVocab(Vocab):
@@ -63,7 +67,7 @@ class PosVocab(Vocab):
 
         vocab = PosVocab()
         vocab._itos = [PAD] + list(unique_pos)
-        vocab._stoi = defaultdict(lambda: 1)
+        vocab._stoi = defaultdict(_unk_token_idx)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
@@ -76,7 +80,7 @@ class CharacterVocab(Vocab):
         chars = list(map(lambda c: c, " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_()[]{}!?:;#'\"/\\%$`&=*+@^~|"))
 
         vocab._itos = [PAD, UNK] + chars
-        vocab._stoi = defaultdict(lambda: 2)
+        vocab._stoi = defaultdict(_unk_token_idx)
         vocab.stoi.update({k: v for v, k in enumerate(vocab.itos)})
 
         return vocab
