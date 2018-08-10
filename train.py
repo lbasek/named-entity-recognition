@@ -17,8 +17,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Script for training NER model.')
     parser.add_argument('--max-epochs', type=int, default=1, help='Max number of epochs model will be trained.')
     parser.add_argument('--batch-size', type=int, default=32, help='Batch size.')
-    parser.add_argument('--train-embeddings', action='store_true', default=False,
-                        help='Should gradients be propagated to word embeddings.')
     parser.add_argument('--save-path', default='models',
                         help='Folder where models (and other configs) will be saved during training.')
     parser.add_argument('--inputs', choices=['words', 'words-pos', 'words-chars', 'words-pos-chars'], default='words',
