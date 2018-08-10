@@ -24,7 +24,7 @@ def classification_report(y_true, y_pred, labels=None, target_names=None,
     digits : int
         Number of digits for formatting output floating point values
     average : string, ['weighted' (default), 'binary', 'micro', 'macro']
-        Determines the type of averaging performed on the data, after reporting the individual results per class:
+        Determines the type of averaging performed on the dataset, after reporting the individual results per class:
         ``'binary'``:
             Only report results for the class specified by ``pos_label``.
             This is applicable only if targets (``y_{true,pred}``) are binary.

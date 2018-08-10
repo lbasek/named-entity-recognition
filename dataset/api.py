@@ -1,19 +1,18 @@
-import itertools
 from collections import namedtuple
 
 import numpy as np
 from keras.utils import to_categorical
-from keras_preprocessing.sequence import pad_sequences
-from root.constants import NO_ENTITY_TOKEN, MAX_LEN, PAD, MAX_LEN_CHAR
+
+from constants import NO_ENTITY_TOKEN, MAX_LEN, PAD, MAX_LEN_CHAR
 from .data_processor import numericalize
 from .vocab import TextVocab, LabelVocab, PosVocab, CharacterVocab
 
 
 def load_dataset():
     # load examples
-    train_examples = load_examples('../dataset/raw/train.txt')
-    val_examples = load_examples('../dataset/raw/valid.txt')
-    test_examples = load_examples('../dataset/raw/test.txt')
+    train_examples = load_examples('data/raw/train.txt')
+    val_examples = load_examples('data/raw/valid.txt')
+    test_examples = load_examples('data/raw/test.txt')
 
     # build vocabularies
     text_vocab = TextVocab.build(list(map(lambda e: e.sentence, train_examples)))
@@ -32,7 +31,7 @@ def load_examples(file_path):
     """
     Loads sentences from file in CoNLL 2003 format.
 
-    :param file_path: Path to file with CoNLL data.
+    :param file_path: Path to file with CoNLL dataset.
     :return: list(Example)
     """
     examples = []
@@ -57,8 +56,10 @@ def load_examples(file_path):
 
             sentence.append(parts[0])
 
-            if parts[1] in ['$', '"', '(', ')', "''", '.', ':', ',']:
-                pos.append('NN')
+            if parts[1] == '(':
+                pos.append('-LRB-')
+            elif parts[1] == ')':
+                pos.append('-RRB-')
             else:
                 pos.append(parts[1])
 
