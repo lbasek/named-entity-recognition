@@ -88,7 +88,7 @@ def create_dataset(examples, text_vocab, labels_vocab, pos_vocab, character_voca
             word_seq = []
             for j in range(MAX_LEN_CHAR):
                 try:
-                    word_seq.append(character_vocab.stoi[sentence[i][0][j]])
+                    word_seq.append(character_vocab.stoi[sentence[i][j]])
                 except:
                     word_seq.append(character_vocab.stoi[PAD])
             sent_seq.append(word_seq)
