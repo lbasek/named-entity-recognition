@@ -3,11 +3,27 @@ import re
 
 import numpy as np
 from keras import Input, Model
+import keras.layers as layers
 from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional, concatenate, SpatialDropout1D
 from keras.utils.vis_utils import plot_model
 from keras.callbacks import TensorBoard
 
 from constants import MAX_LEN, MAX_LEN_CHAR
+
+
+def model_factory(args, num_entities, input, inputs):
+    # Deep Layers
+    rnn_cls = getattr(layers, args.rnn_type)  # gets RNN cell constructor from layers module
+    model = input
+    for _ in range(args.rnn_num_layers):
+        if args.rnn_bidirectional:
+            model = Bidirectional(rnn_cls(units=args.rnn_hidden_size, return_sequences=True, recurrent_dropout=args.rnn_dropout))(model)
+        else:
+            model = rnn_cls(units=args.rnn_hidden_size, return_sequences=True, recurrent_dropout=args.rnn_dropout)(model)
+
+    # Output
+    out = TimeDistributed(Dense(num_entities, activation="softmax"))(model)
+    return Model(inputs=inputs, outputs=[out])
 
 
 class NeuralNetwork(object):
@@ -88,22 +104,3 @@ class NeuralNetwork(object):
         print('Test accuracy:', test_eval[1])
 
         return model, history
-
-
-def create_dir():
-    runs = ([x[0] for x in os.walk("results/logs")])
-    runs = [x for x in runs if "run" in x]
-    runs = list(map(int, re.findall(r'\d+', "".join(runs))))
-    runs.sort()
-    if len(runs) == 0:
-        return "results/logs/run1"
-
-    dir_idx = runs[-1] + 1
-
-    dir = "results/logs/run" + str(dir_idx)
-
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-        return dir
-    else:
-        raise FileExistsError('Clear logs dir.')

@@ -24,7 +24,7 @@ def load_dataset():
     val_set = create_dataset(val_examples, text_vocab, labels_vocab, pos_vocab, character_vocab)
     test_set = create_dataset(test_examples, text_vocab, labels_vocab, pos_vocab, character_vocab)
 
-    return text_vocab, labels_vocab, pos_vocab, character_vocab, train_set, val_set, test_set
+    return Vocabs(text_vocab, pos_vocab, character_vocab, labels_vocab), Datasets(train_set, val_set, test_set)
 
 
 def load_examples(file_path):
@@ -98,4 +98,6 @@ def create_dataset(examples, text_vocab, labels_vocab, pos_vocab, character_voca
 
 
 Example = namedtuple('Example', 'sentence labels pos')
-Dataset = namedtuple('Dataset', 'X y pos characters')
+Dataset = namedtuple('Dataset', 'X y pos chars')
+Datasets = namedtuple('Datasets', 'train val test')
+Vocabs = namedtuple('Vocabs', 'words pos chars labels')

@@ -10,11 +10,10 @@ from utils.classification_report import classification_report
 from utils.plot_confusion_matrix_util import plot_confusion_matrix
 
 
-def test_model(model_path, test, text_vocab, labels_vocab):
+def test_model(model_path, test, test_input, labels_vocab):
     model = load_model(model_path + 'ner_model')
 
-    predicted_values = np.argmax(model.predict([test.X, test.pos, np.array(test.characters).reshape((len(test.characters), MAX_LEN, 10))]),
-                                 axis=-1)
+    predicted_values = np.argmax(model.predict(test_input), axis=-1)
     true_values = np.argmax(test.y, -1)
 
     # flatten to single array with class labels
