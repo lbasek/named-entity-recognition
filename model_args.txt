@@ -1,0 +1,13 @@
+{
+    "max_epochs": 5,
+    "batch_size": 32,
+    "save_path": "models/",
+    "inputs": "words",
+    "embeddings_trainable": false,
+    "embeddings_type": "glove",
+    "rnn_type": "LSTM",
+    "rnn_num_layers": 1,
+    "rnn_bidirectional": false,
+    "rnn_hidden_size": 100,
+    "rnn_dropout": 0.2
+}
