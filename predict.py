@@ -22,10 +22,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    text_vocab = load_object(args.path + 'text_vocab')
-    pos_vocab = load_object(args.path + 'pos_vocab')
-    char_vocab = load_object(args.path + 'char_vocab')
-    labels_vocab = load_object(args.path + 'labels_vocab')
+    vocabs = load_object(args.path + 'vocabs')
     model = load_model(args.path + 'ner_model')
     nlp = spacy.load('en')
 
@@ -40,18 +37,16 @@ def main():
         doc = nlp(user_input)
         text = [token.text for token in doc]
         pos = [token.tag_ for token in doc]
-        chars = numericalize(char_vocab, [[c for c in token.text] for token in doc], NO_ENTITY_TOKEN, maxlen=MAX_LEN_CHAR)
+        chars = numericalize(vocabs.chars, [[c for c in token.text] for token in doc], NO_ENTITY_TOKEN, maxlen=MAX_LEN_CHAR)
         chars = np.array(chars)[np.newaxis, :, :]
-
-        print(chars)
 
         # get model output
         # pad token is irrelevant here beacuse we are numericalizing just one sentence (it won't be padded)
-        text = np.array(numericalize(text_vocab, [text], NO_ENTITY_TOKEN))
-        pos = np.array(numericalize(pos_vocab, [pos], NO_ENTITY_TOKEN))
+        text = np.array(numericalize(vocabs.words, [text], NO_ENTITY_TOKEN))
+        pos = np.array(numericalize(vocabs.pos, [pos], NO_ENTITY_TOKEN))
 
         out = model.predict([text, pos, chars]).squeeze()
-        predicted_labels = [labels_vocab.itos[label_idx] for label_idx in np.argmax(out, axis=1).tolist()]
+        predicted_labels = [vocabs.labels.itos[label_idx] for label_idx in np.argmax(out, axis=1).tolist()]
 
         # print result
         for token, label in zip([token.text for token in doc], predicted_labels):
