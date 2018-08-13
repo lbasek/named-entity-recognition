@@ -29,6 +29,7 @@ def parse_args():
     parser.add_argument('--rnn-bidirectional', action='store_true', default=False, help='Whether RNN is bidirectional.')
     parser.add_argument('--rnn-hidden-size', type=int, default=100, help='RNN hidden size (number of units).')
     parser.add_argument('--rnn-dropout', type=float, default=0.2, help='RNN dropout probability.')
+    parser.add_argument('--model-name', default="", help='Model name')
 
     args = parser.parse_args()
 
@@ -39,11 +40,11 @@ def parse_args():
     return args
 
 
-def plot_train_and_save(history, path):
+def plot_train_and_save(history, path, name):
     # Plot accuracy
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
-    plt.title('Model Accuracy')
+    plt.title('Model Accuracy - ' + name)
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['train', 'validation'], loc='lower right')
@@ -53,7 +54,7 @@ def plot_train_and_save(history, path):
     # Plot loss
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
-    plt.title('Model loss')
+    plt.title('Model loss - ' + name)
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['train', 'validation'], loc='upper right')
@@ -110,9 +111,9 @@ def train(args):
 
     model.save(args.save_path + 'model_ner')
 
-    evaluate(model, datasets.test, test, vocabs.labels, args.save_path)
+    evaluate(model, datasets.test, test, vocabs.labels, args.save_path, args.model_name)
 
-    plot_train_and_save(history, args.save_path)
+    plot_train_and_save(history, args.save_path, args.model_name)
 
 
 if __name__ == '__main__':

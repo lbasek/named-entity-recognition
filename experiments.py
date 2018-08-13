@@ -14,13 +14,14 @@ def json2obj(data):
 
 
 def main():
-    with open('model_args.txt') as fd:
+    with open('model_args.json') as fd:
         data = fd.read()
-    args = json2obj(data)
-    print(args.rnn_type)
-    os.makedirs(args.save_path + 'images', exist_ok=True)
+    experiment_configs = json2obj(data)
 
-    train(args)
+    for args in experiment_configs:
+        print(args.rnn_type)
+        os.makedirs(args.save_path + 'images', exist_ok=True)
+        train(args)
 
 
 if __name__ == '__main__':

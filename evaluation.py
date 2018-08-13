@@ -9,7 +9,7 @@ from utils.classification_report import classification_report
 from utils.plot_confusion_matrix_util import plot_confusion_matrix
 
 
-def evaluate(model, test, test_input, labels_vocab, save_path):
+def evaluate(model, test, test_input, labels_vocab, save_path, name):
     test_eval = model.evaluate(test_input, np.array(test.y))
     print('Test loss:', test_eval[0])
     print('Test accuracy:', test_eval[1])
@@ -50,6 +50,6 @@ def evaluate(model, test, test_input, labels_vocab, save_path):
     # Confusion Matrix
     cnf_matrix = confusion_matrix(true_values, predicted_values)
     np.set_printoptions(precision=2)
-    plot_confusion_matrix(cnf_matrix, classes=list(labels_vocab.stoi.keys()), normalize=True, title='Normalized confusion matrix')
+    plot_confusion_matrix(cnf_matrix, classes=list(labels_vocab.stoi.keys()), normalize=True, title='Confusion matrix - ' + name)
     plt.savefig(save_path + '/images/confusion_matrix.png', dpi=200, format='png', bbox_inches='tight')
     plt.close()

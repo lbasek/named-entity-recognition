@@ -1,0 +1,58 @@
+[
+  {
+    "max_epochs": 10,
+    "batch_size": 32,
+    "save_path": "models/lstm-words-pos-chars/",
+    "inputs": "words-pos-chars",
+    "embeddings_trainable": false,
+    "embeddings_type": "glove",
+    "rnn_type": "LSTM",
+    "rnn_num_layers": 3,
+    "rnn_bidirectional": false,
+    "rnn_hidden_size": 100,
+    "rnn_dropout": 0.2,
+    "model_name":"LSTM"
+  },
+  {
+    "max_epochs": 10,
+    "batch_size": 32,
+    "save_path": "models/gru-words-pos-chars/",
+    "inputs": "words-pos-chars",
+    "embeddings_trainable": false,
+    "embeddings_type": "glove",
+    "rnn_type": "GRU",
+    "rnn_num_layers": 3,
+    "rnn_bidirectional": false,
+    "rnn_hidden_size": 100,
+    "rnn_dropout": 0.2,
+    "model_name":"GRU"
+  },
+  {
+    "max_epochs": 10,
+    "batch_size": 32,
+    "save_path": "models/bi-lstm-words-pos-chars/",
+    "inputs": "words-pos-chars",
+    "embeddings_trainable": false,
+    "embeddings_type": "glove",
+    "rnn_type": "LSTM",
+    "rnn_num_layers": 3,
+    "rnn_bidirectional": true,
+    "rnn_hidden_size": 100,
+    "rnn_dropout": 0.2,
+    "model_name":"Bidirectional LSTM"
+  },
+  {
+    "max_epochs": 10,
+    "batch_size": 32,
+    "save_path": "models/bi-gru-words-pos-chars/",
+    "inputs": "words-pos-chars",
+    "embeddings_trainable": false,
+    "embeddings_type": "glove",
+    "rnn_type": "GRU",
+    "rnn_num_layers": 3,
+    "rnn_bidirectional": true,
+    "rnn_hidden_size": 100,
+    "rnn_dropout": 0.2,
+    "model_name":"Bidirectional GRU"
+  }
+]
