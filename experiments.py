@@ -1,7 +1,7 @@
 import json
 import os
-from datetime import datetime
 from collections import namedtuple
+
 from train import train
 
 
@@ -18,6 +18,7 @@ def main():
         data = fd.read()
     args = json2obj(data)
     print(args.rnn_type)
+    os.makedirs(args.save_path + 'images', exist_ok=True)
 
     train(args)
 

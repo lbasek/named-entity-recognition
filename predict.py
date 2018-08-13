@@ -23,7 +23,7 @@ def main():
     args = parse_args()
 
     vocabs = load_object(args.path + 'vocabs')
-    model = load_model(args.path + 'ner_model')
+    model = load_model(args.path + 'model_ner')
     nlp = spacy.load('en')
 
     while True:

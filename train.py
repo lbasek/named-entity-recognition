@@ -1,11 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
-import re
 import os
 from keras.callbacks import TensorBoard
 from dataset.api import load_dataset
-from test_model import test_model
+from evaluation import evaluate
 from keras.utils.vis_utils import plot_model
 from datetime import datetime
 from inputs import inputs_factory
@@ -40,26 +39,7 @@ def parse_args():
     return args
 
 
-def create_dir():
-    runs = ([x[0] for x in os.walk("results/logs")])
-    runs = [x for x in runs if "run" in x]
-    runs = list(map(int, re.findall(r'\d+', "".join(runs))))
-    runs.sort()
-    if len(runs) == 0:
-        return "results/logs/run1"
-
-    dir_idx = runs[-1] + 1
-
-    dir = "results/logs/run" + str(dir_idx)
-
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-        return dir
-    else:
-        raise FileExistsError('Clear logs dir.')
-
-
-def plot_train_and_save(history):
+def plot_train_and_save(history, path):
     # Plot accuracy
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
@@ -67,7 +47,7 @@ def plot_train_and_save(history):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['train', 'validation'], loc='lower right')
-    plt.savefig('results/model_accuracy.png', dpi=200, format='png', bbox_inches='tight')
+    plt.savefig(path + '/images/model_accuracy.png', dpi=200, format='png', bbox_inches='tight')
     plt.close()
 
     # Plot loss
@@ -77,7 +57,7 @@ def plot_train_and_save(history):
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['train', 'validation'], loc='upper right')
-    plt.savefig('results/model_loss.png', dpi=200, format='png', bbox_inches='tight')
+    plt.savefig(path + '/images/model_loss.png', dpi=200, format='png', bbox_inches='tight')
     plt.close()
 
 
@@ -114,12 +94,10 @@ def train(args):
 
     # prepare model
     model.compile(optimizer="rmsprop", loss='categorical_crossentropy', metrics=['accuracy'])
-    plot_model(model, to_file=args.save_path + 'ner_model_image.png')
+    plot_model(model, to_file=args.save_path + 'images/model_structure.png')
     print(model.summary())
 
-    dir = create_dir()
-
-    tensorboard_callback = TensorBoard(log_dir=dir, histogram_freq=0, write_graph=True, write_images=True)
+    tensorboard_callback = TensorBoard(log_dir=args.save_path, histogram_freq=0, write_graph=True, write_images=True)
 
     # get inputs based on args.inputs argument
     train, val, test = filter_inputs(args, datasets)
@@ -130,14 +108,11 @@ def train(args):
         validation_data=(val, np.array(datasets.val.y)),
         callbacks=[tensorboard_callback], verbose=1)
 
-    model.save(args.save_path + 'ner_model')
+    model.save(args.save_path + 'model_ner')
 
-    test_eval = model.evaluate(test, np.array(datasets.test.y))
-    print('Test loss:', test_eval[0])
-    print('Test accuracy:', test_eval[1])
+    evaluate(model, datasets.test, test, vocabs.labels, args.save_path)
 
-    test_model(args.save_path, datasets.test, test, vocabs.labels)
-    plot_train_and_save(history)
+    plot_train_and_save(history, args.save_path)
 
 
 if __name__ == '__main__':

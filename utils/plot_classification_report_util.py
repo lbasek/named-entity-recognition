@@ -34,7 +34,7 @@ def cm2inch(*tupl):
         return tuple(i / inch for i in tupl)
 
 
-def heatmap(AUC, title, xlabel, ylabel, xticklabels, yticklabels, figure_width=40, figure_height=20,
+def heatmap(path, AUC, title, xlabel, ylabel, xticklabels, yticklabels, figure_width=40, figure_height=20,
             correct_orientation=False, cmap='RdBu'):
     '''
     Inspired by:
@@ -89,9 +89,11 @@ def heatmap(AUC, title, xlabel, ylabel, xticklabels, yticklabels, figure_width=4
     # fig.set_size_inches(cm2inch(40, 20))
     # fig.set_size_inches(cm2inch(40*4, 20*4))
     fig.set_size_inches(cm2inch(figure_width, figure_height))
+    plt.savefig(path + 'model_loss.png', dpi=200, format='png', bbox_inches='tight')
+    plt.close()
 
 
-def plot_classification_report(classification_report, title='Classification report ', cmap='RdBu'):
+def plot_classification_report(classification_report, path, title='Classification report ', cmap='RdBu'):
     '''
     Plot scikit-learn classification report.
     Extension based on https://stackoverflow.com/a/31689645/395857
@@ -110,7 +112,7 @@ def plot_classification_report(classification_report, title='Classification repo
         if len(t) < 2:
             continue
 
-        if t[0] == 'avg':
+        if t[0] == 'avg' or t[0] == 'macro avg' or t[0] == 'micro avg':
             t[0:3] = [''.join(t[0:3]).upper()]
 
         classes.append(t[0])
@@ -130,5 +132,5 @@ def plot_classification_report(classification_report, title='Classification repo
     figure_width = 25
     figure_height = len(class_names) + 7
     correct_orientation = False
-    heatmap(np.array(plotMat), title, xlabel, ylabel, xticklabels, yticklabels, figure_width, figure_height,
+    heatmap(path, np.array(plotMat), title, xlabel, ylabel, xticklabels, yticklabels, figure_width, figure_height,
             correct_orientation, cmap=cmap)

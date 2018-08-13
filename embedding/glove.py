@@ -4,7 +4,7 @@ import numpy as np
 GLOVE_DIR = 'embedding/glove.6B.100d.txt'
 
 
-def get_pretrained_glove(num_words, text_vocab):
+def pre_trained_glove(num_words, text_vocab):
     embeddings_index = {}
     try:
         f = open(GLOVE_DIR, 'r+', encoding="utf-8")
