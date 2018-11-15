@@ -10,6 +10,8 @@ Dataset: `CoNLL2003`
 
 Labels:   `B-PER, I-PER, B-LOC, I-LOC, B-MISC, I-MISC, B-ORG, I-ORG, O`
 
+Used libraries: `keras, spacy, numpy, scikit-learn, matplotlib`
+
 ## Model accuracy and loss without additional features
 <img src="val-acc-no-features.png" width="425"/> <img src="val-loss-no-features.png" width="425"/> 
 
