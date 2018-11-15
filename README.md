@@ -1,5 +1,10 @@
 # Named Entitiy Recognition
 
+Contributors:
+
+Luka Bašek - https://github.com/lbasek
+Luka Dulčić - https://github.com/ldulcic
+
 An implementation of Named Entity Recognition using Keras.
 
 Dataset: `CoNLL2003`
