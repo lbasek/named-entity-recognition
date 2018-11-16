@@ -20,10 +20,34 @@ Labels:   `B-PER, I-PER, B-LOC, I-LOC, B-MISC, I-MISC, B-ORG, I-ORG, O`
 
 Used libraries: `keras, spacy, numpy, scikit-learn, matplotlib`
 
-## Model accuracy and loss without additional features
+
+## Results:
+
+#### Model results where additional features has been not used:
+
+| Model     | Precision     | Recall  | F1     |
+| --------- |:-------------:| -------:| ------:|
+| LSTM      | 0.6487        | 0.7527  | 0.6821 |
+| GRU       | 0.6985        | 0.7589  | 0.7161 |
+| BI-LSTM   | 0.7995        | 0.7098  | 0.7414 |
+| BI-GRU    | 0.8529        | 0.7372  | 0.7861 | 
+
+#### Model accuracy and loss without additional features
 <img src="val-acc-no-features.png" width="425"/> <img src="val-loss-no-features.png" width="425"/> 
 
-## Model accuracy and loss with additional features
+---
+
+
+#### Model results where additional features has been used:
+
+| Model     | Precision     | Recall  | F1     |
+| --------- |:-------------:| -------:| ------:|
+| LSTM      | 0.8123        | 0.8162  | 0.8138 |
+| GRU       | 0.8085        | 0.8071  | 0.8056 |
+| BI-LSTM   | 0.8408        | 0.8616  | 0.8493 |
+| BI-GRU    | 0.8610        | 0.8604  | 0.8604 | 
+
+#### Model accuracy and loss with additional features
 <img src="val-acc-features.png" width="425"/> <img src="val-loss-features.png" width="425"/> 
 
 
